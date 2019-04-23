@@ -3,30 +3,47 @@ const db = require('./data/db');
 const router = express.Router();
 
 router.post('/', (req, res) => { 
-    const userInformation = req.body;
+    const postInformation = req.body;
 
-    if (userInformation.title && userInformation.contents) {
-        db.insert(userInformation)
-        .then(user => {
-            res.status(201).json(user);
+    if (postInformation.title && postInformation.contents) {
+        db.insert(postInformation)
+        .then(post => {
+            res.status(201).json(post);
         })
         .catch(err => {
-            res.status(500).json({error: "There was an error while saving the user to the database"})
+            res.status(500).json({error: "There was an error while saving the post to the database"})
         })
 
     } else {
-        res.status(400).json({errorMessage: "Please provide title and content for the user."})
+        res.status(400).json({errorMessage: "Please provide title and content for the post."})
     }
 })
 
 router.get('/', (req, res) => {
     db.find()
-    .then(user => {
-        res.status(200).json(user);
+    .then(post => {
+        res.status(200).json(post);
     })
     .catch(err => {
-        res.status(500).json({ error: "The users information could not be retrieved." })
+        res.status(500).json({ error: "The posts information could not be retrieved." })
     })
+})
+
+router.get('/:id', (req, res) => {
+    const postId = req.params.id;
+
+    db.findById(postId)
+        .then(post => {
+            console.log(post)
+            if(post) {
+                res.status(200).json(post);
+            } else {
+                res.status(404).json({message: "The post with the specified ID does not exist."})
+            }
+        }) 
+        .catch(err => {
+            res.status(500).json({error: "The post information could not be retrieved."})
+        })
 })
 
 
