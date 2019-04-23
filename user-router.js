@@ -62,5 +62,26 @@ router.delete('/:id', (req, res) => {
         })
 })
 
+router.put('/:id', (req, res) => {
+    const postId = req.params.id;
+    const postInformation = req.body
+
+    if (postInformation.title && postInformation.contents) {
+        db.update(postId, postInformation)
+        .then(response => {
+            if(response) {
+                res.status(200).json(response)
+            } else {
+                res.status(404).json({message: "The post with the specified ID does not exist."})
+            }
+        })
+        .catch(err => {
+            res.status(500).json({error: "The post information could not be modified."})
+        })
+    } else {
+        res.status(400).json({errorMessage: "Please provide name and bio for the post."})
+    }
+
+})
 
 module.exports = router;
