@@ -2,7 +2,7 @@ const express = require('express');
 const db = require('./data/db');
 const router = express.Router();
 
-router.post('/', (req, res) => {
+router.post('/', (req, res) => { 
     const userInformation = req.body;
 
     if (userInformation.title && userInformation.contents) {
